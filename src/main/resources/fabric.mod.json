@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "blacklist",
+	"version": "${version}",
+	"name": "Inventory Blacklist",
+	"description": "Prevent certain items from being picked up.",
+	"authors": [
+		"Arcadesmasher"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/blacklist/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.blacklist.ItemBlacklistMod"
+		],
+		"mixins": [
+			"ItemEntityMixin"
+		]
+	},
+	"mixins": [
+		"blacklist.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
