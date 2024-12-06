@@ -9,7 +9,8 @@
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/pickup-filter/",
-		"sources": "https://github.com/arcade-smasher/item-blacklist/"
+		"sources": "https://github.com/arcade-smasher/item-blacklist/",
+		"issues": "https://github.com/arcade-smasher/item-blacklist/issues/"
 	},
 	"license": "MIT",
 	"icon": "assets/blacklist/icon.png",
