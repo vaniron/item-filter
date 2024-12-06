@@ -8,10 +8,10 @@
 		"Arcadesmasher"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://modrinth.com/mod/pickup-filter/",
+		"sources": "https://github.com/arcade-smasher/item-blacklist/"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/blacklist/icon.png",
 	"environment": "*",
 	"entrypoints": {
