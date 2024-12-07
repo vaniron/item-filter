@@ -13,6 +13,8 @@ import java.util.Set;
 public class FilterState extends PersistentState {
     private final Map<String, Set<Item>> playerFilter = new HashMap<>();
     private final Map<String, Boolean> playerFilterStatus = new HashMap<>();
+    private final Map<String, Boolean> playerFilterLocked = new HashMap<>();
+    private final Map<String, Boolean> playerFilterHidden = new HashMap<>();
 
     public Set<Item> getFilter(String playerId) {
         return playerFilter.computeIfAbsent(playerId, k -> new HashSet<>());
@@ -24,7 +26,25 @@ public class FilterState extends PersistentState {
     }
 
     public boolean getFilterStatus(String playerId) {
-        return playerFilterStatus.getOrDefault(playerId, false);
+        return playerFilterStatus.getOrDefault(playerId, true);
+    }
+
+    public void setFilterLocked(String playerId, boolean isLocked) {
+        playerFilterLocked.put(playerId, isLocked);
+        markDirty();
+    }
+
+    public boolean getFilterLocked(String playerId) {
+        return playerFilterLocked.getOrDefault(playerId, false);
+    }
+
+    public void setFilterHidden(String playerId, boolean isHidden) {
+        playerFilterHidden.put(playerId, isHidden);
+        markDirty();
+    }
+
+    public boolean getFilterHidden(String playerId) {
+        return playerFilterHidden.getOrDefault(playerId, false);
     }
 
     public void addFilter(String playerId, Item item) {
@@ -58,8 +78,20 @@ public class FilterState extends PersistentState {
             statusCompound.putBoolean(playerId, isBlacklist);
         });
 
+        NbtCompound lockedCompound = new NbtCompound();
+        playerFilterLocked.forEach((playerId, isLocked) -> {
+            lockedCompound.putBoolean(playerId, isLocked);
+        });
+
+        NbtCompound hiddenCompound = new NbtCompound();
+        playerFilterHidden.forEach((playerId, isHidden) -> {
+            hiddenCompound.putBoolean(playerId, isHidden);
+        });
+
         nbt.put("filter", playersCompound);
         nbt.put("filterStatus", statusCompound);
+        nbt.put("filterLocked", lockedCompound);
+        nbt.put("filterHidden", hiddenCompound);
         return nbt;
     }
 
@@ -79,6 +111,16 @@ public class FilterState extends PersistentState {
         NbtCompound statusCompound = nbt.getCompound("filterStatus");
         for (String playerId : statusCompound.getKeys()) {
             state.playerFilterStatus.put(playerId, statusCompound.getBoolean(playerId));
+        }
+
+        NbtCompound lockedCompound = nbt.getCompound("filterLocked");
+        for (String playerId : lockedCompound.getKeys()) {
+            state.playerFilterLocked.put(playerId, lockedCompound.getBoolean(playerId));
+        }
+
+        NbtCompound hiddenCompound = nbt.getCompound("filterHidden");
+        for (String playerId : hiddenCompound.getKeys()) {
+            state.playerFilterHidden.put(playerId, hiddenCompound.getBoolean(playerId));
         }
 
         return state;
