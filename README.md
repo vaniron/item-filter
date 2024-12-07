@@ -1,2 +1,2 @@
-# Item Blacklist
-A mod that adds an item blacklist.
+# Item Filter
+A mod that adds an item filter.

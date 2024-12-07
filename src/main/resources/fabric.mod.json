@@ -1,34 +1,34 @@
 {
 	"schemaVersion": 1,
-	"id": "blacklist",
+	"id": "itemfilter",
 	"version": "${version}",
-	"name": "Inventory Blacklist",
+	"name": "Pickup Filter",
 	"description": "Prevent certain items from being picked up.",
 	"authors": [
 		"Arcadesmasher"
 	],
 	"contact": {
 		"homepage": "https://modrinth.com/mod/pickup-filter/",
-		"sources": "https://github.com/arcade-smasher/item-blacklist/",
-		"issues": "https://github.com/arcade-smasher/item-blacklist/issues/"
+		"sources": "https://github.com/arcade-smasher/item-filter/",
+		"issues": "https://github.com/arcade-smasher/item-filter/issues/"
 	},
 	"license": "MIT",
-	"icon": "assets/blacklist/icon.png",
+	"icon": "assets/itemfilter/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.blacklist.ItemBlacklistMod"
+			"com.itemfilter.ItemFilterMod"
 		],
 		"mixins": [
 			"ItemEntityMixin"
 		]
 	},
 	"mixins": [
-		"blacklist.mixins.json"
+		"itemfilter.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.9",
-		"minecraft": "~1.20.1",
+		"minecraft": ">=1.20 <1.20.2",
 		"java": ">=17",
 		"fabric-api": "*"
 	},
