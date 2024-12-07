@@ -2,6 +2,7 @@
 // - Add translation key instead of literals
 // - Let server owners change people's filter
 // - Let server owners change permission level required to use command
+// - Let users have a seperate whitelist and blacklist (Might not do this if I don't figure out a good way to implement it)
 package com.itemfilter;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -31,7 +32,7 @@ public class ItemFilterMod implements ModInitializer {
                             FilterState state = getFilterState(context.getSource().getServer());
                             String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             state.addFilter(playerUuid, item);
-                            player.sendMessage(Text.literal("Added " + item + " to your " + mode + "."), false);
+                            player.sendMessage(Text.literal("Added " + item.getName().getString() + " to your " + mode + "."), false);
                             return 1;
                         })
                     )
@@ -45,7 +46,7 @@ public class ItemFilterMod implements ModInitializer {
                             FilterState state = getFilterState(context.getSource().getServer());
                             String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             state.removeFilter(playerUuid, item);
-                            player.sendMessage(Text.literal("Removed " + item + " from your " + mode + "."), false);
+                            player.sendMessage(Text.literal("Removed " + item.getName().getString() + " from your " + mode + "."), false);
                             return 1;
                         })
                     )
@@ -101,6 +102,16 @@ public class ItemFilterMod implements ModInitializer {
                             return 1;
                         })
                     )
+                    .executes(context -> {
+                        ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
+                        FilterState state = getFilterState(context.getSource().getServer());
+                        String playerUuid = player.getUuidAsString();
+                        String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
+
+                        player.sendMessage(Text.literal("Your item filter mode is set to " + mode + "."), false);
+
+                        return 1;
+                    })
                 )
             );
         });
@@ -111,7 +122,7 @@ public class ItemFilterMod implements ModInitializer {
         return state.getFilter(player.getUuidAsString());
     }
 
-    private static FilterState getFilterState(MinecraftServer server) {
+    public static FilterState getFilterState(MinecraftServer server) {
         PersistentStateManager stateManager = server.getOverworld().getPersistentStateManager();
         return stateManager.getOrCreate(FilterState::fromNbt, FilterState::new, STATE_NAME);
     }
