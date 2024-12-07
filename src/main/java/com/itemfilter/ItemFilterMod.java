@@ -310,6 +310,73 @@ public class ItemFilterMod implements ModInitializer {
                         })
                     )
                 )
+                .then(literal("default")
+                    .requires(source -> source.hasPermissionLevel(2))
+                    .then(literal("locked")
+                        .then(literal("false")
+                            .executes(context -> {
+                                ServerPlayerEntity executor = context.getSource().getPlayerOrThrow();
+                                FilterState state = getFilterState(context.getSource().getServer());
+
+                                if (!state.getFilterLockedDefault()) {
+                                    executor.sendMessage(Text.literal("Item filters are already not set to locked by default."), false);
+                                } else {
+                                    state.setFilterLockedDefault(false);
+                                    executor.sendMessage(Text.literal("Item filters will not be set to locked by default."), false);
+                                }
+
+                                return 1;
+                            })
+                        )
+                        .then(literal("true")
+                            .executes(context -> {
+                                ServerPlayerEntity executor = context.getSource().getPlayerOrThrow();
+                                FilterState state = getFilterState(context.getSource().getServer());
+
+                                if (state.getFilterLockedDefault()) {
+                                    executor.sendMessage(Text.literal("Item filters are already set to locked by default."), false);
+                                } else {
+                                    state.setFilterLockedDefault(true);
+                                    executor.sendMessage(Text.literal("Item filters will now be set to locked by default."), false);
+                                }
+
+                                return 1;
+                            })
+                        )
+                    )
+                    .then(literal("hidden")
+                        .then(literal("false")
+                            .executes(context -> {
+                                ServerPlayerEntity executor = context.getSource().getPlayerOrThrow();
+                                FilterState state = getFilterState(context.getSource().getServer());
+
+                                if (!state.getFilterHiddenDefault()) {
+                                    executor.sendMessage(Text.literal("Item filters are already not set to hidden by default."), false);
+                                } else {
+                                    state.setFilterHiddenDefault(false);
+                                    executor.sendMessage(Text.literal("Item filters will not be set to hidden by default."), false);
+                                }
+
+                                return 1;
+                            })
+                        )
+                        .then(literal("true")
+                            .executes(context -> {
+                                ServerPlayerEntity executor = context.getSource().getPlayerOrThrow();
+                                FilterState state = getFilterState(context.getSource().getServer());
+
+                                if (state.getFilterHiddenDefault()) {
+                                    executor.sendMessage(Text.literal("Item filters are already set to hidden by default."), false);
+                                } else {
+                                    state.setFilterHiddenDefault(true);
+                                    executor.sendMessage(Text.literal("Item filters will now be set to hidden by default."), false);
+                                }
+
+                                return 1;
+                            })
+                        )
+                    )
+                )
             );
         });
     }
