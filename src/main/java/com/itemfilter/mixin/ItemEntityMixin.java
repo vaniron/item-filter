@@ -26,14 +26,8 @@ public abstract class ItemEntityMixin {
             String playerUuid = serverPlayer.getUuidAsString();
             Boolean isBlacklist = ItemFilterMod.getFilterState(server).getFilterStatus(playerUuid);
             Boolean inList = filter.contains(((ItemEntity) (Object) this).getStack().getItem());
-            if (isBlacklist) {
-                if (inList) {
-                    ci.cancel();
-                }
-            } else {
-                if (!inList) {
-                    ci.cancel();
-                }
+            if (isBlacklist == inList) {
+                ci.cancel();
             }
         }
     }
