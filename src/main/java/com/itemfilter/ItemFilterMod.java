@@ -27,17 +27,19 @@ public class ItemFilterMod implements ModInitializer {
                             String playerUuid = player.getUuidAsString();
                             FilterState state = getFilterState(context.getSource().getServer());
                             if (state.getFilterLocked(playerUuid)) {
-                                player.sendMessage(Text.translatable("itemfilter.filterlocked"), false);
+                                player.sendMessage(Text.literal("Your item filter is locked."), false);
                                 return 0;
                             }
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             Set<Item> filter = state.getFilter(playerUuid);
                             if (filter.contains(item)) {
-                                player.sendMessage(Text.translatable("itemfilter.alreadycontains", mode, item.getName().getString()), false);
+                                player.sendMessage(Text.literal("Your " + mode + " already contains " + item.getName().getString() + "."), false);
                                 return 0;
                             }
+
                             state.addFilter(playerUuid, item);
-                            player.sendMessage(Text.translatable("itemfilter.addeditem", item.getName().getString(), mode), false);
+                            player.sendMessage(Text.literal("Added " + item.getName().getString() + " to your " + mode + "."), false);
                             return 1;
                         })
                     )
@@ -50,17 +52,17 @@ public class ItemFilterMod implements ModInitializer {
                             String playerUuid = player.getUuidAsString();
                             FilterState state = getFilterState(context.getSource().getServer());
                             if (state.getFilterLocked(playerUuid)) {
-                                player.sendMessage(Text.translatable("itemfilter.filterlocked"), false);
+                                player.sendMessage(Text.literal("Your item filter is locked."), false);
                                 return 0;
                             }
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             Set<Item> filter = state.getFilter(playerUuid);
                             if (!filter.contains(item)) {
-                                player.sendMessage(Text.translatable("itemfilter.doesntcontain", mode, item.getName().getString()), false);
+                                player.sendMessage(Text.literal("Your " + mode + " does not contain " + item.getName().getString() + "."), false);
                                 return 0;
                             }
                             state.removeFilter(playerUuid, item);
-                            player.sendMessage(Text.translatable("itemfilter.removeditem", item.getName().getString(), mode), false);
+                            player.sendMessage(Text.literal("Removed " + item.getName().getString() + " from your " + mode + "."), false);
                             return 1;
                         })
                     )
@@ -70,16 +72,16 @@ public class ItemFilterMod implements ModInitializer {
                         ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                         FilterState state = getFilterState(context.getSource().getServer());
                         String playerUuid = player.getUuidAsString();
-                        String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                        String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                         if (state.getFilterHidden(playerUuid)) {
-                            player.sendMessage(Text.translatable("itemfilter.filterhidden"), false);
+                            player.sendMessage(Text.literal("Your item filter is hidden."), false);
                             return 0;
                         }
                         Set<Item> filter = state.getFilter(playerUuid);
                         if (filter.isEmpty()) {
-                            player.sendMessage(Text.translatable("itemfilter.empty", mode), false);
+                            player.sendMessage(Text.literal("Your " + mode + " is empty."), false);
                         } else {
-                            player.sendMessage(Text.translatable("itemfilter.listitems", mode), false);
+                            player.sendMessage(Text.literal("Your " + mode + "ed items:"), false);
                             for (Item item : filter) {
                                 player.sendMessage(Text.literal("- " + item.getName().getString()), false);
                             }
@@ -93,17 +95,16 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String newmode = Text.translatable("itemfilter.blacklist").getString();
                             if (state.getFilterLocked(playerUuid)) {
-                                player.sendMessage(Text.translatable("itemfilter.filterlocked"), false);
+                                player.sendMessage(Text.literal("Your item filter is locked."), false);
                                 return 0;
                             }
 
                             if (state.getFilterStatus(playerUuid)) {
-                                player.sendMessage(Text.translatable("itemfilter.alreadyinmode", newmode), false);
+                                player.sendMessage(Text.literal("You are already in blacklist mode; nothing changed."), false);
                             } else {
                                 state.setFilterStatus(playerUuid, true);
-                                player.sendMessage(Text.translatable("itemfilter.switchedmode", newmode), false);
+                                player.sendMessage(Text.literal("Switched to blacklist mode."), false);
                             }
 
                             return 1;
@@ -114,17 +115,16 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String newmode = Text.translatable("itemfilter.whitelist").getString();
                             if (state.getFilterLocked(playerUuid)) {
-                                player.sendMessage(Text.translatable("itemfilter.filterlocked"), false);
+                                player.sendMessage(Text.literal("Your item filter is locked."), false);
                                 return 0;
                             }
 
                             if (!state.getFilterStatus(playerUuid)) {
-                                player.sendMessage(Text.translatable("itemfilter.alreadyinmode", newmode), false);
+                                player.sendMessage(Text.literal("You are already in whitelist mode; nothing changed."), false);
                             } else {
                                 state.setFilterStatus(playerUuid, false);
-                                player.sendMessage(Text.translatable("itemfilter.switchedmode", newmode), false);
+                                player.sendMessage(Text.literal("Switched to whitelist mode."), false);
                             }
 
                             return 1;
@@ -134,13 +134,13 @@ public class ItemFilterMod implements ModInitializer {
                         ServerPlayerEntity player = context.getSource().getPlayerOrThrow();
                         FilterState state = getFilterState(context.getSource().getServer());
                         String playerUuid = player.getUuidAsString();
-                        String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                        String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                         if (state.getFilterHidden(playerUuid)) {
-                            player.sendMessage(Text.translatable("itemfilter.filterhidden"), false);
+                            player.sendMessage(Text.literal("Your item filter is hidden."), false);
                             return 0;
                         }
 
-                        player.sendMessage(Text.translatable("itemfilter.filtermode", mode), false);
+                        player.sendMessage(Text.literal("Your item filter mode is set to " + mode + "."), false);
 
                         return 1;
                     })
@@ -155,16 +155,16 @@ public class ItemFilterMod implements ModInitializer {
                                 Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
                                 String playerUuid = player.getUuidAsString();
                                 FilterState state = getFilterState(context.getSource().getServer());
-                                String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                                String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                                 String playerName = player.getName().getString();
                                 String itemName = item.getName().getString();
                                 Set<Item> filter = state.getFilter(playerUuid);
                                 if (filter.contains(item)) {
-                                    player.sendMessage(Text.translatable("itemfilter.alreadycontainsalt", playerName, mode, itemName), false);
+                                    player.sendMessage(Text.literal(playerName + "'s " + mode + " already contains " + itemName + "."), false);
                                     return 0;
                                 }
                                 state.addFilter(playerUuid, item);
-                                executor.sendMessage(Text.translatable("itemfilter.addeditemalt", itemName, playerName, mode), false);
+                                executor.sendMessage(Text.literal("Added " + itemName + " to " + playerName + "'s " + mode + "."), false);
                                 return 1;
                             })
                         )
@@ -177,16 +177,16 @@ public class ItemFilterMod implements ModInitializer {
                                 Item item = ItemStackArgumentType.getItemStackArgument(context, "item").getItem();
                                 String playerUuid = player.getUuidAsString();
                                 FilterState state = getFilterState(context.getSource().getServer());
-                                String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                                String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                                 String playerName = player.getName().getString();
                                 String itemName = item.getName().getString();
                                 Set<Item> filter = state.getFilter(playerUuid);
                                 if (!filter.contains(item)) {
-                                    player.sendMessage(Text.translatable("itemfilter.doesntcontainalt", playerName, mode, itemName), false);
+                                    player.sendMessage(Text.literal(playerName + "'s " + mode + " does not contain " + itemName + "."), false);
                                     return 0;
                                 }
                                 state.removeFilter(playerUuid, item);
-                                executor.sendMessage(Text.translatable("itemfilter.doesntcontainalt", itemName, playerName, mode), false);
+                                executor.sendMessage(Text.literal("Removed " + itemName + " from " + playerName + "'s " + mode + "."), false);
                                 return 1;
                             })
                         )
@@ -197,13 +197,13 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             String playerName = player.getName().getString();
                             Set<Item> filter = state.getFilter(playerUuid);
                             if (filter.isEmpty()) {
-                                executor.sendMessage(Text.translatable("itemfilter.emptyalt", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + "'s " + mode + " is empty."), false);
                             } else {
-                                executor.sendMessage(Text.translatable("itemfilter.listitemsalt", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + "'s " + mode + "ed items:"), false);
                                 for (Item item : filter) {
                                     executor.sendMessage(Text.literal("- " + item.getName().getString()), false);
                                 }
@@ -222,10 +222,10 @@ public class ItemFilterMod implements ModInitializer {
                                 String playerName = player.getName().getString();
 
                                 if (state.getFilterStatus(playerUuid)) {
-                                    executor.sendMessage(Text.translatable("itemfilter.alreadyinmodealt", playerName, mode), false);
+                                    executor.sendMessage(Text.literal(playerName + " is already in blacklist mode; nothing changed."), false);
                                 } else {
                                     state.setFilterStatus(playerUuid, true);
-                                    executor.sendMessage(Text.translatable("itemfilter.switchedmodealt", playerName, mode), false);
+                                    executor.sendMessage(Text.literal("Switched " + playerName + " to blacklist mode."), false);
                                 }
 
                                 return 1;
@@ -236,15 +236,14 @@ public class ItemFilterMod implements ModInitializer {
                                 ServerPlayerEntity executor = context.getSource().getPlayerOrThrow();
                                 ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                                 FilterState state = getFilterState(context.getSource().getServer());
-                                String mode = Text.translatable("itemfilter.whitelist").getString();
                                 String playerUuid = player.getUuidAsString();
                                 String playerName = player.getName().getString();
 
                                 if (!state.getFilterStatus(playerUuid)) {
-                                    executor.sendMessage(Text.translatable("itemfilter.alreadyinmodealt", playerName, mode), false);
+                                    executor.sendMessage(Text.literal(playerName + " is already in whitelist mode; nothing changed."), false);
                                 } else {
                                     state.setFilterStatus(playerUuid, false);
-                                    executor.sendMessage(Text.translatable("itemfilter.switchedmodealt", playerName, mode), false);
+                                    executor.sendMessage(Text.literal("Switched " + playerName + " to whitelist mode."), false);
                                 }
 
                                 return 1;
@@ -255,10 +254,10 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             String playerName = player.getName().getString();
 
-                            executor.sendMessage(Text.translatable("itemfilter.filtermodealt", playerName, mode), false);
+                            executor.sendMessage(Text.literal(playerName + "'s item filter mode is set to " + mode + "."), false);
 
                             return 1;
                         })
@@ -269,14 +268,14 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             String playerName = player.getName().getString();
 
                             if (state.getFilterLocked(playerUuid)) {
-                                executor.sendMessage(Text.translatable("itemfilter.alreadylocked", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + "'s " + mode + " is already locked."), false);
                             } else {
                                 state.setFilterLocked(playerUuid, true);
-                                executor.sendMessage(Text.translatable("itemfilter.nowlocked", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + "'s " + mode + " is now locked."), false);
                             }
 
                             return 1;
@@ -288,14 +287,14 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             String playerName = player.getName().getString();
 
                             if (!state.getFilterLocked(playerUuid)) {
-                                executor.sendMessage(Text.translatable("itemfilter.alreadyunlocked", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + "'s " + mode + " is already unlocked."), false);
                             } else {
                                 state.setFilterLocked(playerUuid, false);
-                                executor.sendMessage(Text.translatable("itemfilter.nowunlocked", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + "'s " + mode + " is now unlocked."), false);
                             }
 
                             return 1;
@@ -326,14 +325,14 @@ public class ItemFilterMod implements ModInitializer {
                             ServerPlayerEntity player = EntityArgumentType.getPlayer(context, "player");
                             FilterState state = getFilterState(context.getSource().getServer());
                             String playerUuid = player.getUuidAsString();
-                            String mode = state.getFilterStatus(playerUuid) ? Text.translatable("itemfilter.blacklist").getString() : Text.translatable("itemfilter.whitelist").getString();
+                            String mode = state.getFilterStatus(playerUuid) ? "blacklist" : "whitelist";
                             String playerName = player.getName().getString();
 
                             if (!state.getFilterHidden(playerUuid)) {
-                                executor.sendMessage(Text.translatable("itemfilter.alreadyshown", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + " can already view their " + mode + "."), false);
                             } else {
                                 state.setFilterHidden(playerUuid, false);
-                                executor.sendMessage(Text.translatable("itemfilter.nowshown", playerName, mode), false);
+                                executor.sendMessage(Text.literal(playerName + " can now view their " + mode + "."), false);
                             }
 
                             return 1;
@@ -349,10 +348,10 @@ public class ItemFilterMod implements ModInitializer {
                                 FilterState state = getFilterState(context.getSource().getServer());
 
                                 if (!state.getFilterLockedDefault()) {
-                                    executor.sendMessage(Text.translatable("itemfilter.alreadyunlockeddefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters are already not set to locked by default."), false);
                                 } else {
                                     state.setFilterLockedDefault(false);
-                                    executor.sendMessage(Text.translatable("itemfilter.unlockeddefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters will not be set to locked by default."), false);
                                 }
 
                                 return 1;
@@ -364,10 +363,10 @@ public class ItemFilterMod implements ModInitializer {
                                 FilterState state = getFilterState(context.getSource().getServer());
 
                                 if (state.getFilterLockedDefault()) {
-                                    executor.sendMessage(Text.translatable("itemfilter.alreadylockeddefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters are already set to locked by default."), false);
                                 } else {
                                     state.setFilterLockedDefault(true);
-                                    executor.sendMessage(Text.translatable("itemfilter.lockeddefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters will now be set to locked by default."), false);
                                 }
 
                                 return 1;
@@ -381,10 +380,10 @@ public class ItemFilterMod implements ModInitializer {
                                 FilterState state = getFilterState(context.getSource().getServer());
 
                                 if (!state.getFilterHiddenDefault()) {
-                                    executor.sendMessage(Text.translatable("itemfilter.alreadyshowndefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters are already not set to hidden by default."), false);
                                 } else {
                                     state.setFilterHiddenDefault(false);
-                                    executor.sendMessage(Text.translatable("itemfilter.showndefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters will not be set to hidden by default."), false);
                                 }
 
                                 return 1;
@@ -396,10 +395,10 @@ public class ItemFilterMod implements ModInitializer {
                                 FilterState state = getFilterState(context.getSource().getServer());
 
                                 if (state.getFilterHiddenDefault()) {
-                                    executor.sendMessage(Text.translatable("itemfilter.alreadyhiddendefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters are already set to hidden by default."), false);
                                 } else {
                                     state.setFilterHiddenDefault(true);
-                                    executor.sendMessage(Text.translatable("itemfilter.hiddendefault"), false);
+                                    executor.sendMessage(Text.literal("Item filters will now be set to hidden by default."), false);
                                 }
 
                                 return 1;
