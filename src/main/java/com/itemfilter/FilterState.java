@@ -3,12 +3,14 @@ package com.itemfilter;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.PersistentState;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import net.minecraft.datafixer.DataFixTypes;
 
 public class FilterState extends PersistentState {
     private final Map<String, Set<Item>> playerFilter = new HashMap<>();
@@ -17,6 +19,12 @@ public class FilterState extends PersistentState {
     private final Map<String, Boolean> playerFilterHidden = new HashMap<>();
     private static Boolean playerFilterLockedDefault = false;
     private static Boolean playerFilterHiddenDefault = false;
+
+    public static final PersistentState.Type<FilterState> TYPE = new PersistentState.Type<>(
+            FilterState::new,
+            FilterState::fromNbt,
+            DataFixTypes.PLAYER
+    );
 
     public Set<Item> getFilter(String playerId) {
         return playerFilter.computeIfAbsent(playerId, k -> new HashSet<>());
@@ -80,7 +88,7 @@ public class FilterState extends PersistentState {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         NbtCompound playersCompound = new NbtCompound();
 
         playerFilter.forEach((playerId, items) -> {
@@ -116,15 +124,19 @@ public class FilterState extends PersistentState {
         return nbt;
     }
 
-    public static FilterState fromNbt(NbtCompound nbt) {
+    public static FilterState fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         FilterState state = new FilterState();
         NbtCompound playersCompound = nbt.getCompound("filter");
+
         for (String playerId : playersCompound.getKeys()) {
             NbtCompound itemsCompound = playersCompound.getCompound(playerId);
             Set<Item> items = new HashSet<>();
             for (String key : itemsCompound.getKeys()) {
-                Identifier itemId = new Identifier(itemsCompound.getString(key));
-                items.add(Registries.ITEM.get(itemId));
+                Identifier itemId = Identifier.tryParse(itemsCompound.getString(key));
+                if (itemId != null) {
+                    Item item = Registries.ITEM.get(itemId);
+                    items.add(item);
+                }
             }
             state.playerFilter.put(playerId, items);
         }
@@ -145,9 +157,9 @@ public class FilterState extends PersistentState {
         }
 
         playerFilterLockedDefault = nbt.getBoolean("filterLockedDefault");
-
         playerFilterHiddenDefault = nbt.getBoolean("filterHiddenDefault");
 
         return state;
     }
+
 }
